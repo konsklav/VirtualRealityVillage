@@ -14,7 +14,7 @@ public class SkyboxTransition : MonoBehaviour
 
     [Header("Transition Settings")]
     public float transitionDuration = 10f; // Time taken to transition between day and night
-    public float waitTime = 50f; // Time to wait before switching (day/night cycle length)
+    public float waitTime = 20f; // Time to wait before switching (day/night cycle length)
 
     private bool isDay = true; // Tracks whether it's currently day
 
