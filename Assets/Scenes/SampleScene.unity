@@ -4626,6 +4626,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 50
+  player: {fileID: 694129919}
+  activationDistance: 30
 --- !u!1 &451772350
 GameObject:
   m_ObjectHideFlags: 0
@@ -12319,7 +12321,7 @@ MonoBehaviour:
   dayIntensity: 1.2
   nightIntensity: 0.2
   transitionDuration: 10
-  waitTime: 10
+  waitTime: 20
 --- !u!4 &1359241381
 Transform:
   m_ObjectHideFlags: 0
