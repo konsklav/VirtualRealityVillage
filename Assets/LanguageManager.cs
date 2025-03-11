@@ -73,4 +73,15 @@ public class LanguageManager : MonoBehaviour
     {
         return selectedLanguage;
     }
+
+    // Sets the language displayed in the in-game labels
+    public string GetLabelText(string key)
+    {
+        if (localizedText.ContainsKey(key))
+        {
+            return localizedText[key];
+        }
+        return $"[{key}]"; // Show the key if the text is missing
+    }
+
 }
