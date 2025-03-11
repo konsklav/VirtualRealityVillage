@@ -4,62 +4,61 @@ using System.Collections;
 public class SkyboxTransition : MonoBehaviour
 {
     [Header("Skyboxes")]
-    public Material daySkybox;
-    public Material nightSkybox;
+    public Material daySkybox; // Skybox material for daytime
+    public Material nightSkybox; // Skybox material for nighttime
 
     [Header("Sunlight Settings")]
-    public Light sunLight;
-    public float dayIntensity = 1.2f;
-    public float nightIntensity = 0.2f;
+    public Light sunLight; // Reference to the directional light (sun)
+    public float dayIntensity = 1.2f; // Light intensity during the day
+    public float nightIntensity = 0.2f; // Light intensity during the night
 
     [Header("Transition Settings")]
-    public float transitionDuration = 10f; // Transition now takes 10s
-    public float waitTime = 50f; // Wait time between transitions is 50s
+    public float transitionDuration = 10f; // Time taken to transition between day and night
+    public float waitTime = 50f; // Time to wait before switching (day/night cycle length)
 
-    private bool isDay = true;
+    private bool isDay = true; // Tracks whether it's currently day
 
     void Start()
     {
+        // Set initial skybox to daytime
         RenderSettings.skybox = daySkybox;
         sunLight.intensity = dayIntensity;
+
+        // Start the cycle of transitioning between day and night
         StartCoroutine(CycleDayNight());
     }
 
     IEnumerator CycleDayNight()
     {
-        while (true)
+        while (true) // Infinite loop for continuous cycling
         {
-            // **Start with a 50-second wait before the first transition**
-            yield return new WaitForSeconds(waitTime);
+            yield return new WaitForSeconds(waitTime); // Wait before transitioning to night
 
-            // Dim light over 10s
-            yield return StartCoroutine(ChangeLightIntensity(dayIntensity, nightIntensity));
+            yield return StartCoroutine(ChangeLightIntensity(dayIntensity, nightIntensity)); // Fade sunlight
 
-            // Change skybox to night
-            RenderSettings.skybox = nightSkybox;
-            DynamicGI.UpdateEnvironment();
+            RenderSettings.skybox = nightSkybox; // Switch to night skybox
+            DynamicGI.UpdateEnvironment(); // Update global illumination
 
-            // Wait at night for 50s
-            yield return new WaitForSeconds(waitTime);
+            yield return new WaitForSeconds(waitTime); // Wait before transitioning back to day
 
-            // Brighten light over 10s
-            yield return StartCoroutine(ChangeLightIntensity(nightIntensity, dayIntensity));
+            yield return StartCoroutine(ChangeLightIntensity(nightIntensity, dayIntensity)); // Fade sunlight back
 
-            // Change skybox to day
-            RenderSettings.skybox = daySkybox;
-            DynamicGI.UpdateEnvironment();
+            RenderSettings.skybox = daySkybox; // Switch to day skybox
+            DynamicGI.UpdateEnvironment(); // Update global illumination
         }
     }
 
     IEnumerator ChangeLightIntensity(float from, float to)
     {
-        float elapsedTime = 0f;
-        while (elapsedTime < transitionDuration)
+        float elapsedTime = 0f; // Timer to track transition progress
+
+        while (elapsedTime < transitionDuration) // Loop until transition is complete
         {
-            sunLight.intensity = Mathf.Lerp(from, to, elapsedTime / transitionDuration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            sunLight.intensity = Mathf.Lerp(from, to, elapsedTime / transitionDuration); // Gradually change light intensity
+            elapsedTime += Time.deltaTime; // Increment timer
+            yield return null; // Wait for the next frame
         }
-        sunLight.intensity = to; // Ensure final value is set correctly
+
+        sunLight.intensity = to; // Ensure final intensity is set
     }
 }
